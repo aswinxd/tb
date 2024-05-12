@@ -27,15 +27,20 @@ def get_terabox_file_details(terabox_link):
         response = requests.get(terabox_link)
         soup = BeautifulSoup(response.content, 'html.parser')
         # Extracting details from the HTML, adjust as per Terabox's HTML structure
-        direct_link = soup.find('a', class_='download-btn')['href']
-        file_name = soup.find('h1', class_='file-title').text.strip()
-        file_size = soup.find('span', class_='file-size').text.strip()
-        return {'direct_link': direct_link, 'file_name': file_name, 'file_size': file_size}
+        direct_link_elem = soup.find('a', class_='download-btn')
+        file_title_elem = soup.find('h1', class_='file-title')
+        file_size_elem = soup.find('span', class_='file-size')
+        if direct_link_elem and file_title_elem and file_size_elem:
+            direct_link = direct_link_elem['href']
+            file_name = file_title_elem.text.strip()
+            file_size = file_size_elem.text.strip()
+            return {'direct_link': direct_link, 'file_name': file_name, 'file_size': file_size}
+        else:
+            print("Unable to find required elements in HTML")
+            return None
     except Exception as e:
         print("Error extracting Terabox file details:", e)
         return None
-    # Example: Call an API or parse the HTML to get the details
-    return {'direct_link': 'https://example.com/download/file'}
 
 def download_file(file_url, update, context):
     try:
