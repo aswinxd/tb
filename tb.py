@@ -1,7 +1,10 @@
 import os
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 import requests
+from dotenv import load_dotenv
 
+load_dotenv()  # Load variables from .env file
+print(os.getenv("BOT_TOKEN"))
 def start(update, context):
     context.bot.send_message(chat_id=update.effective_chat.id, text="Hi there! I can download files from Terabox. Send me a Terabox link to download.")
 
